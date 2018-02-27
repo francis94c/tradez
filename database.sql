@@ -14,8 +14,10 @@ UNIQUE, password TEXT NOT NULL, phone VARCHAR(11) UNIQUE NOT NULL) Engine=InnoDB
 
 /*ads*/
 CREATE TABLE ads (id INT(7) AUTO_INCREMENT PRIMARY KEY, title VARCHAR(40) NOT
-NULL, location VARCHAR(50) NOT NULL, lat_long TEXT, user_id INT(7) NOT NULL)
-Engine=InnoDB;
+NULL, location VARCHAR(50) NOT NULL, lat_long TEXT, user_id INT(7) NOT NULL,
+category_id INT(2) NOT NULL, sub_category_id INT(2) NOT NULL, FOREIGN KEY
+(category_id) REFERENCES categories(id), FOREIGN KEY (sub_category_id)
+REFERENCES sub_categories(id)) Engine=InnoDB;
 
 /*videos*/
 CREATE TABLE videos (id INT(7) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(10) NOT
