@@ -8,7 +8,10 @@ class AdsManager extends CI_Model {
     $data["user_id"] = $this->security->xss_clean($userId);
     $data["title"] = $this->security->xss_clean($title);
     $data["location"] = $this->security->xss_clean($location);
-    return $this->db->insert("ads", $data);
+    if ($this->db->insert("ads", $data)) {
+      return $this->db->insert_id();
+    }
+    return -1;
   }
 
   function getAd($id) {
