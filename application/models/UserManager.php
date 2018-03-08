@@ -17,7 +17,7 @@ class UserManager extends CI_Model {
     return $this->db->get_where("users", array("id"=>$id))->result_array()[0];
   }
 
-  function validateUsername($userName) {
+  function validateUserName($userName) {
     $this->db->where("username", $userName);
     if ($this->db->count_all_results() > 0) {
       $this->db->reset_query();
