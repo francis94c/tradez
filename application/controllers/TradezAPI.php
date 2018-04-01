@@ -2,6 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class TradezAPI extends CI_Controller {
+
   /**
    * [signUp for signing up users]
    * @param  [type] $fullName [description]
@@ -22,6 +23,11 @@ class TradezAPI extends CI_Controller {
     echo json_encode($data);
   }
 
+  /**
+   * [validateUserName description]
+   * @param  [type] $userName [description]
+   * @return [type]           [description]
+   */
   function validateUserName($userName) {
     $this->load->model("UserManager", "users");
     $data = array();
@@ -31,6 +37,86 @@ class TradezAPI extends CI_Controller {
       $data["valid"] = 0;
     }
     echo json_encode($data);
+  }
+
+  /**
+   * [validateUser description]
+   * @param  [type] $userName [description]
+   * @param  [type] $password [description]
+   * @return [type]           [description]
+   */
+  function validateUser($userName, $password) {
+    $this->load->model("UserManager", "users");
+    $data = array();
+    if ($this->users->validateUser($userName, $password)) {
+      $data["user_id"] = $this->users->getUserId();
+    } else {
+      $data["user_id"] = -1;
+    }
+    echo json_encode($data);
+  }
+
+  /**
+   * [createAd description]
+   * @param  [type] $userId   [description]
+   * @param  [type] $title    [description]
+   * @param  [type] $location [description]
+   * @return [type]           [description]
+   */
+  function createAd($userId, $title, $location) {
+    $this->load->model("AdsManager", "ads");
+    $data = array();
+    $data["ad_id"] = $this->ads->createAd($userId, $title, $location);
+    echo json_encode($data);
+  }
+
+  function addImage($adId) {
+    $config["upload_path"] = FCPATH . "images";
+    $config["allowed_types"] = "gif|jpg|png";
+    $this->load->helper("string");
+    $fileName = random_string("alnum", 10);
+    $config["file_name"] = $fileName . ".jpg";
+    $this->load->library("upload", $config);
+    $data = array();
+    if (!$this->upload->do_upload("ad_image")) {
+      $data["success"] = 0;
+    } else {
+      $this->load->model("MediaManager", "media");
+      if ($this->media->addImage($adId, $fileName)) {
+        $data["success"] = 1;
+      } else {
+        $data["success"] = 0;
+      }
+    }
+    echo json_encode($data);
+  }
+
+  function getAdImages($adId) {
+
+  }
+
+  function getAdVideos($adId) {
+
+  }
+
+  function getMyAds($userId) {
+
+  }
+
+  function deleteAd($userId, $adId) {
+
+  }
+
+  function getUserContact() {
+
+  }
+
+  function getAds() {
+
+  }
+
+  function searchAds() {
+
   }
 
 }

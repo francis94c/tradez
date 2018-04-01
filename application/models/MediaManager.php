@@ -45,26 +45,26 @@ class MediaManager extends CI_Model {
     return $this->db->get_where("videos", array("id" => $id))->result_array()[0];
   }
 
-  function createVideo($adId) {
+  function addVideo($adId, $fileName) {
     $data = array();
     $this->load->helper("string");
-    $data["name"] = random_string('alnum', 10);
+    $data["name"] = $fileName;
     $data["ad_id"] = $adId;
     if ($this->db->insert("videos", $data)) {
-      return $this->db->insert_id();
+      return true;
     }
-    return -1;
+    return false;
   }
 
-  function createImage($adId) {
+  function addImage($adId, $fileName) {
     $data = array();
     $this->load->helper("string");
-    $data["name"] = random_string('alnum', 10);
+    $data["name"] = $fileName;
     $data["ad_id"] = $adId;
     if ($this->db->insert("images", $data)) {
-      return $this->db->insert_id();
+      return true;
     }
-    return -1;
+    return false;
   }
 
 }
