@@ -12,7 +12,12 @@ class TradezAPI extends CI_Controller {
    * @param  [type] $password [description]
    * @return [type]           [description]
    */
-  function signUp($fullName, $userName, $email, $phone, $password) {
+  function signUp() {
+    $fullName = $this->input->post("full_name");
+    $userName = $this->input->post("user_name");
+    $email = $this->input->post("email");
+    $phone = $this->input->post("phone");
+    $password = $this->input->post("password");
     $this->load->model("UserManager", "users");
     $data = array();
     if ($this->users->createUser($fullName, $userName, $email, $phone, $password)) {
@@ -45,11 +50,14 @@ class TradezAPI extends CI_Controller {
    * @param  [type] $password [description]
    * @return [type]           [description]
    */
-  function validateUser($userName, $password) {
+  function validateUser() {
+    $userName = $this->input->post("email");
+    $password = $this->input->post("password");
     $this->load->model("UserManager", "users");
     $data = array();
     if ($this->users->validateUser($userName, $password)) {
-      $data["user_id"] = $this->users->getUserId();
+      $data["user_id"] = $this->users->getUserId($userName);
+      $data["user"] = $this->db->getUser($data["user_id"]);
     } else {
       $data["user_id"] = -1;
     }
@@ -63,13 +71,17 @@ class TradezAPI extends CI_Controller {
    * @param  [type] $location [description]
    * @return [type]           [description]
    */
-  function createAd($userId, $title, $location) {
+  function createAd($userId, $title, $location, $category, $subCategory) {
     $this->load->model("AdsManager", "ads");
     $data = array();
-    $data["ad_id"] = $this->ads->createAd($userId, $title, $location);
+    $data["ad_id"] = $this->ads->createAd($userId, $title, $location, $category, $subCategory);
     echo json_encode($data);
   }
 
+  /**
+   * [addImage description]
+   * @param [type] $adId [description]
+   */
   function addImage($adId) {
     $config["upload_path"] = FCPATH . "images";
     $config["allowed_types"] = "gif|jpg|png";
@@ -112,6 +124,18 @@ class TradezAPI extends CI_Controller {
   }
 
   function getAds() {
+
+  }
+
+  function getCategories() {
+
+  }
+
+  function getSubCategories() {
+
+  }
+
+  function getAdsByCategory($cid) {
 
   }
 

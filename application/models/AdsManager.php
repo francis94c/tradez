@@ -3,11 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class AdsManager extends CI_Model {
 
-  function createAd($userId, $title, $location) {
+  function createAd($userId, $title, $location, $category, $subCategory) {
     $data = array();
     $data["user_id"] = $this->security->xss_clean($userId);
     $data["title"] = $this->security->xss_clean($title);
     $data["location"] = $this->security->xss_clean($location);
+    $data["category_id"] = $category;
+    $data["sub_category_id"] = $subCategory;
     if ($this->db->insert("ads", $data)) {
       return $this->db->insert_id();
     }

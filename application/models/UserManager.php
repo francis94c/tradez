@@ -49,15 +49,17 @@ class UserManager extends CI_Model {
     return $this->db->update("users", array("full_name"=>$fullName));
   }
 
-  function getUserId($username) {
+  function getUserId($user) {
     $this->db->select("id");
     $this->db->where("username", $user);
     $this->db->or_where("email", $user);
     $this->db->or_where("phone", $user);
-    return $query = $this->db->get("users")->result()[0]->id;
+    return $this->db->get("users")->result()[0]->id;
   }
 
   function validateUser($user, $password) {
+    $user = $this->security->xss_clean($user);
+    $password = $this->security->xss_clean($password);
     $this->db->where("username", $user);
     $this->db->or_where("email", $user);
     $this->db->or_where("phone", $user);
