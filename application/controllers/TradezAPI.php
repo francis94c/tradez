@@ -2,6 +2,10 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class TradezAPI extends CI_Controller {
+	
+	function index() {
+		echo "Hello";
+	}
 
   /**
    * [signUp for signing up users]
@@ -50,14 +54,12 @@ class TradezAPI extends CI_Controller {
    * @param  [type] $password [description]
    * @return [type]           [description]
    */
-  function validateUser() {
-    $userName = $this->input->post("email");
-    $password = $this->input->post("password");
+  function validateUser($userName, $password) {
     $this->load->model("UserManager", "users");
     $data = array();
     if ($this->users->validateUser($userName, $password)) {
       $data["user_id"] = $this->users->getUserId($userName);
-      $data["user"] = $this->db->getUser($data["user_id"]);
+      $data["user"] = $this->users->getUser($data["user_id"]);
     } else {
       $data["user_id"] = -1;
     }
@@ -103,6 +105,30 @@ class TradezAPI extends CI_Controller {
     echo json_encode($data);
   }
 
+  /**
+   * [addVideo description]
+   */
+  function addVideo($adId) {
+    $config["upload_path"] = FCPATH . "videos";
+    $config["allowed_types"] = "mp4";
+    $this->load->helper("string");
+    $fileName = random_string("alnum", 10);
+    $config["file_name"] = $fileName . ".mp4";
+    $this->load->library("upload", $config);
+    $data = array();
+    if (!$this->upload->do_upload("ad_video")) {
+      $data["success"] = 0;
+    } else {
+      $this->load->model("MediaManager", "media");
+      if ($this->media->addVideo($adId, $fileName)) {
+        $data["success"] = 1;
+      } else {
+        $data["success"] = 0;
+      }
+    }
+    echo json_encode($data);
+  }
+
   function getAdImages($adId) {
 
   }
@@ -128,11 +154,13 @@ class TradezAPI extends CI_Controller {
   }
 
   function getCategories() {
-
+    $this->load->model("CategoryManager", "categories");
+    echo json_encode($this->categories->getCategories());
   }
 
   function getSubCategories() {
-
+    $this->load->model("CategoryManager", "categories");
+    echo json_encode($this->categories->getSubCategories());
   }
 
   function getAdsByCategory($cid) {

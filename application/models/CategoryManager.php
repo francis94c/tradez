@@ -7,7 +7,11 @@ class CategoryManager extends CI_Model {
     return $this->db->get("categories")->result_array();
   }
 
-  function getSubCategories($cid) {
+  function getSubCategories() {
+    return $this->db->get("sub_categories")->result_array();
+  }
+
+  function getSubCategoriesByCategoryId($cid) {
     return $this->db->get_where("sub_categories", array("category_id" => $cid))->result_array();
   }
 

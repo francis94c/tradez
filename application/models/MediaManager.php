@@ -47,7 +47,6 @@ class MediaManager extends CI_Model {
 
   function addVideo($adId, $fileName) {
     $data = array();
-    $this->load->helper("string");
     $data["name"] = $fileName;
     $data["ad_id"] = $adId;
     if ($this->db->insert("videos", $data)) {
@@ -58,7 +57,6 @@ class MediaManager extends CI_Model {
 
   function addImage($adId, $fileName) {
     $data = array();
-    $this->load->helper("string");
     $data["name"] = $fileName;
     $data["ad_id"] = $adId;
     if ($this->db->insert("images", $data)) {
